@@ -33,7 +33,6 @@ function makeFullscreen()
             table.sort(modes, function(a, b) return a.width*a.height < b.width*b.height end)
             love.graphics.setMode(modes[#modes].width, modes[#modes].height, true)
         else
-            dump(savedMode)
             love.graphics.setMode(savedMode[1], savedMode[2], false)
         end
     end
