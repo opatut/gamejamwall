@@ -3,6 +3,8 @@
 require("util/gamestate")
 require("util/resources")
 
+require("blur")
+
 MainState = class("MainState", GameState)
 
 colors = {
@@ -27,6 +29,7 @@ function MainState:__init()
     self.irc_log = {}
     self.lifetime = 0
     self.updateTimer = 0
+    self.blurs = {}
 
     self:readConfig()
 end
@@ -104,8 +107,12 @@ end
 
 
 function MainState:draw()
-    love.graphics.setBackgroundColor(17, 17, 17)
+    love.graphics.setBackgroundColor(hsl2rgb(self.lifetime * 6 % 360, 50, 20))
     love.graphics.clear()
+
+    for i = 1, #self.blurs do
+        self.blurs[i]:draw()
+    end
 
     local x = love.graphics.getWidth() - 40
     local y = 40
@@ -267,10 +274,39 @@ function MainState:update(dt)
     end
 
     self:updateIrc()
+
+    for i = 1, #self.blurs do
+        self.blurs[i]:update(dt)
+    end
+
+    for i=#self.blurs,1,-1 do
+        if self.blurs[i].l >= 1 then -- could be any other complex condition
+            table.remove(self.blurs, i)
+        end
+    end
+
+    local b = 100
+    local s = 15
+    for i=#self.blurs,50 do
+        table.insert(self.blurs, Blur(
+            math.random(-b, love.graphics.getWidth()+b),
+            math.random(-b, love.graphics.getHeight()+b),
+            0.1 + math.random() * 0.5,
+            -s+2*s*math.random(),
+            -s+2*s*math.random()
+            ))
+    end
 end
 
 function MainState:keypressed(k, u)
     if k == "escape" or k == "q" then
         stack:pop()
+    elseif k == "tab" then
+        stack:push(states.settings)
+    elseif k == "f" then
+        fullscreen = not fullscreen
+        settings:set("fullscreen", fullscreen)
+        settings:save()
+        makeFullscreen()
     end
 end

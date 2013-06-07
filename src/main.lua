@@ -9,7 +9,7 @@ require("libs/date")
 
 settings = Settings()
 settings:load()
-fullscreen = false -- settings:get("fullscreen", false)
+fullscreen = settings:get("fullscreen", false)
 savedMode = nil
 
 resources = Resources("data/")
@@ -45,7 +45,8 @@ function love.load()
     math.randomseed(os.time())
 
     -- load images
-    -- resources:addImage("logo", "logo.png")
+    resources:addImage("blur1", "blur1.png")
+    resources:addImage("blur2", "blur2.png")
 --    settings:set("start_time", "2013-06-08 00:00")
 --    settings:set("duration", 48)
 --    settings:set("title", "BaconGameJam 05")
@@ -83,14 +84,6 @@ function love.draw()
 end
 
 function love.keypressed(k, u)
-    if k == "f" then
-        fullscreen = not fullscreen
-        --settings:set("fullscreen", fullscreen)
-        --settings:save()
-
-        makeFullscreen()
-    end
-
     stack:keypressed(k, u)
 end
 
