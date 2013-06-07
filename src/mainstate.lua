@@ -95,8 +95,13 @@ function MainState:connectIrc()
         self:ircAction("part", user)
     end)
 
+    self.irc:hook("NickChange", function(user, newnick, channel)
+        self:ircAction("nick", user, newnick)
+    end)
+
     self.irc:connect(self.irc_server)
     self.irc:join(self.irc_channel)
+    self.irc:trackUsers(true)
 end
 
 function MainState:updateIrc()
@@ -240,6 +245,7 @@ function MainState:draw()
         local log = self.irc_log[#self.irc_log-i]
 
         local nick = log.user.nick
+        local access = log.user.access
         local message = log.message
         local color = {255, 255, 255, 200}
         if log.type == "join" then
@@ -248,6 +254,9 @@ function MainState:draw()
         elseif log.type == "part" then
             message = "++ left the channel ++"
             color = {255, 0, 0, 160}
+        elseif log.type == "nick" then
+            message = "is now known as " .. message
+            color = {255, 255, 255, 120}
         end
 
         -- calculate height
@@ -255,10 +264,14 @@ function MainState:draw()
         y = y - lines * font2:getHeight() * font2:getLineHeight()
 
         local hash = string.hashcode(nick)
+        local nickwidth = font1:getWidth(nick)
+        local accesswidth = font1:getWidth(access)
 
         love.graphics.setFont(font1)
+        love.graphics.setColor(255, 255, 255)
+        love.graphics.print(access, x1 - 12 - nickwidth - accesswidth, y)
         love.graphics.setColor(unpack(colors[hash%#colors + 1]))
-        love.graphics.printf(nick, x, y, x1 - x - 10, "right")
+        love.graphics.print(nick, x1 - 10 - nickwidth, y)
 
         love.graphics.setFont(font2)
         love.graphics.setColor(unpack(color))
