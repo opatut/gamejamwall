@@ -1,0 +1,6 @@
+[submodule "src/libs/irc"]
+	path = src/libs/irc
+	url = git@github.com:JakobOvrum/LuaIRC.git
+[submodule "src/irc"]
+	path = src/irc
+	url = git@github.com:JakobOvrum/LuaIRC.git
