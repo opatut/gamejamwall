@@ -48,6 +48,7 @@ function SettingsState:keypressed(k, u)
         end
         settings:save()
         stack:pop()
+        stack:pop()
     elseif k == "down" or (k == "tab" and not shift) then
         self.selected = self.selected + 1
         if self.selected > #self.options then self.selected = 1 end

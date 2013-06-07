@@ -51,6 +51,10 @@ function MainState:readConfig()
 end
 
 function MainState:startMpd()
+    if self.mpd then
+        self.mpd:close()
+    end
+
     local status, err = pcall(function()
         self.mpd = mpd.connect(self.mpd_host, self.mpd_port, true)
     end)
@@ -128,7 +132,7 @@ function MainState:draw()
     love.graphics.rectangle("fill", 30, 30, love.graphics.getWidth() / 2 - 40, 120)
     love.graphics.rectangle("fill", 30, 170, love.graphics.getWidth() - 60, love.graphics.getHeight() - 200)
 
-    if self.mpd then
+    if self.mpd and self.mpd_status and self.mpd_song then
         local status = self.mpd_status
         local song = self.mpd_song
         local elapsed = (status.state=="stop" and 0 or status.elapsed)
