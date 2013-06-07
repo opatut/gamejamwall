@@ -236,8 +236,8 @@ function MainState:draw()
 
     local x = 40
     local w = love.graphics.getWidth() - 80
-    local x1 = 180
-    local w1 = w - x1 + x
+    local x1 = 220
+    local w1 = w - x1 + x + 5
     local y = love.graphics.getHeight() - 40
     local font1 = resources.fonts.monobold
     local font2 = resources.fonts.mono
@@ -272,6 +272,10 @@ function MainState:draw()
         local accesswidth = font1:getWidth(access)
 
         love.graphics.setFont(font1)
+
+        love.graphics.setColor(255, 255, 255, 200)
+        love.graphics.print(log.time:fmt("%X"), x, y)
+
         love.graphics.setColor(255, 255, 255)
         love.graphics.print(access, x1 - 12 - nickwidth - accesswidth, y)
         love.graphics.setColor(unpack(colors[hash%#colors + 1]))
