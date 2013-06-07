@@ -64,6 +64,9 @@ function love.load()
     resources:addFont("bigger", "DejaVuSans.ttf", 24)
     resources:addFont("biggest", "DejaVuSans.ttf", 50)
 
+    resources:addFont("mono", "DejaVuSansMono.ttf", 11)
+    resources:addFont("monobold", "DejaVuSansMono-Bold.ttf", 11)
+
     -- load music
     -- resources:addMusic("background", "background.mp3")
 

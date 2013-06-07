@@ -230,9 +230,10 @@ function MainState:draw()
     local x1 = 180
     local w1 = w - x1 + x
     local y = love.graphics.getHeight() - 40
-    local font = resources.fonts.small
-    love.graphics.setFont(font)
-    font:setLineHeight(1.2)
+    local font1 = resources.fonts.monobold
+    local font2 = resources.fonts.mono
+    font1:setLineHeight(1.2)
+    font2:setLineHeight(1.2)
 
     local i = 0
     while y > 190 and i < #self.irc_log do
@@ -250,19 +251,24 @@ function MainState:draw()
         end
 
         -- calculate height
-        local width, lines = font:getWrap(message, w1)
-        y = y - lines * font:getHeight() * font:getLineHeight()
+        local width, lines = font2:getWrap(message, w1)
+        y = y - lines * font2:getHeight() * font2:getLineHeight()
 
         local hash = string.hashcode(nick)
+
+        love.graphics.setFont(font1)
         love.graphics.setColor(unpack(colors[hash%#colors + 1]))
-        love.graphics.printf(nick, x, y, x1 - x - 20, "right")
+        love.graphics.printf(nick, x, y, x1 - x - 10, "right")
+
+        love.graphics.setFont(font2)
         love.graphics.setColor(unpack(color))
         love.graphics.printf(message, x1, y, w1, "left")
 
         i = i + 1
     end
 
-    font:setLineHeight(1)
+    font1:setLineHeight(1)
+    font2:setLineHeight(1)
 end
 
 function MainState:update(dt)
@@ -287,7 +293,7 @@ function MainState:update(dt)
 
     local b = 100
     local s = 15
-    for i=#self.blurs,50 do
+    for i=#self.blurs,100 do
         table.insert(self.blurs, Blur(
             math.random(-b, love.graphics.getWidth()+b),
             math.random(-b, love.graphics.getHeight()+b),
