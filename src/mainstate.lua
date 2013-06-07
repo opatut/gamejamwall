@@ -161,10 +161,13 @@ function MainState:draw()
     local diff, state
 
     if now < self.start_time then
-        diff = date.diff(now, self.start_time)
+        diff = date.diff(self.start_time, now)
         state = 1
     elseif now > self.end_time then
         diff = date.diff(now, self.end_time)
+        if diff:spanseconds() <= 10 then
+            diff = date.diff(self.end_time, self.end_time)
+        end
         state = 3
     else
         diff = date.diff(self.end_time, now)
@@ -172,12 +175,30 @@ function MainState:draw()
     end
 
     love.graphics.setColor(255, 255, 255)
+
+    local min = diff:spanminutes()
+    local sec = diff:spanseconds()
+
+    if state < 3 then
+        if sec <= 10 then
+            love.graphics.setColor(255, 0, 0, self.lifetime%0.4 < 0.2 and 255 or 0)
+        elseif min <= 1 then
+            love.graphics.setColor(255, 0, 0)
+        elseif min <= 10 then
+            love.graphics.setColor(255, 255, 0)
+        end
+    elseif state == 3 then
+        if sec <= 10 then
+            love.graphics.setColor(255, 0, 0, self.lifetime%0.4 < 0.2 and 255 or 0)
+        end
+    end
+
     love.graphics.setFont(resources.fonts.biggest)
     local delta = diff:fmt("%X")
     if diff:spandays() >= 1 then
-        delta = math.floor(diff:spandays()) .. "d, " .. delta
+        delta = math.floor(diff:spandays()) .. "d" .. delta
     end
-    love.graphics.printf(delta, x, y + 20, w, "center")
+    love.graphics.printf(delta, x, y + 24, w, "center")
 
 
     if state == 2 then
@@ -191,6 +212,9 @@ function MainState:draw()
         love.graphics.setColor(255, 128, 0)
         love.graphics.rectangle("fill", x, y + 93, w * progress, 7)
         --love.graphics.arc("fill", love.graphics.getWidth() / 2 - r - 20, y+50, r, a, a - math.pi * 2 * progress )
+    else
+        love.graphics.setFont(resources.fonts.normal)
+        love.graphics.printf(state == 1 and "Starting soon" or "Finished", x, y + 82, w, "center")
     end
 
 
@@ -239,9 +263,10 @@ function MainState:update(dt)
     self.updateTimer = self.updateTimer - dt
     if self.updateTimer <= 0 then
         self:updateMpd()
-        self:updateIrc()
         self.updateTimer = 0.5
     end
+
+    self:updateIrc()
 end
 
 function MainState:keypressed(k, u)

@@ -46,15 +46,15 @@ function love.load()
 
     -- load images
     -- resources:addImage("logo", "logo.png")
-    settings:set("start_time", "2013-06-08 00:00")
-    settings:set("duration", 48)
-    settings:set("title", "BaconGameJam 05")
-    settings:set("mpd_host", "localhost")
-    settings:set("mpd_port", "6600")
-
-    settings:set("irc_server", "irc.freenode.net")
-    settings:set("irc_channel", "#mehtestlua")
-    settings:set("irc_nick", "statuswallbot")
+--    settings:set("start_time", "2013-06-08 00:00")
+--    settings:set("duration", 48)
+--    settings:set("title", "BaconGameJam 05")
+--    settings:set("mpd_host", "localhost")
+--    settings:set("mpd_port", "6600")
+--
+--    settings:set("irc_server", "irc.freenode.net")
+--    settings:set("irc_channel", "#mehtestlua")
+--    settings:set("irc_nick", "statuswallbot")
 
     -- load fonts
     resources:addFont("tiny", "DejaVuSans.ttf", 9)
