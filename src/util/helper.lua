@@ -117,7 +117,7 @@ end
 -- Converts HSL to RGB (input and output range: 0 - 255)
 function hsl2rgb(h, s, l)
    if s == 0 then return l,l,l end
-   h, s, l = h/256*6, s/255, l/255
+   h, s, l = h/256*6, s/256, l/256
    local c = (1-math.abs(2*l-1))*s
    local x = (1-math.abs(h%2-1))*c
    local m,r,g,b = (l-.5*c), 0,0,0

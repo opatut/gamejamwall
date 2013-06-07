@@ -112,7 +112,7 @@ end
 
 
 function MainState:draw()
-    love.graphics.setBackgroundColor(hsl2rgb(self.lifetime * 6 % 360, 50, 20))
+    love.graphics.setBackgroundColor(hsl2rgb(self.hue, 50, 20))
     love.graphics.clear()
 
     for i = 1, #self.blurs do
@@ -292,6 +292,8 @@ function MainState:update(dt)
         self.updateTimer = 0.5
     end
 
+    self.hue = self.lifetime * 6 % 255
+
     self:updateIrc()
 
     for i = 1, #self.blurs do
@@ -306,14 +308,17 @@ function MainState:update(dt)
 
     local b = 100
     local s = 15
-    for i=#self.blurs,100 do
-        table.insert(self.blurs, Blur(
-            math.random(-b, love.graphics.getWidth()+b),
-            math.random(-b, love.graphics.getHeight()+b),
-            0.1 + math.random() * 0.5,
-            -s+2*s*math.random(),
-            -s+2*s*math.random()
-            ))
+    if settings:get("animate", true) then
+        for i=#self.blurs,200 do
+            table.insert(self.blurs, Blur(
+                math.random(-b, love.graphics.getWidth()+b),
+                math.random(-b, love.graphics.getHeight()+b),
+                0.1 + math.random() * 5.0,
+                -0.5*s+s*math.random(),
+                -0.9*s+s*math.random(),
+                self.hue
+                ))
+        end
     end
 end
 
@@ -327,5 +332,9 @@ function MainState:keypressed(k, u)
         settings:set("fullscreen", fullscreen)
         settings:save()
         makeFullscreen()
+    elseif k == "a" then
+        local a = settings:get("animate", true)
+        settings:set("animate", not a)
+        settings:save()
     end
 end
